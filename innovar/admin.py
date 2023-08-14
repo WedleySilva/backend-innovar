@@ -1,7 +1,6 @@
 from django.contrib import admin
 from .models import (Atendente, ChavePermissao, Cliente, ClientePacote, ClienteProcedimento, HorarioBloqueado, Pacote, Procedimento, UsuarioCustomizado)
 
-
 @admin.register(Atendente)
 class AtendenteAdmin(admin.ModelAdmin):
     list_display = ('usuario',)
@@ -12,7 +11,7 @@ class ChavePermissaoAdmin(admin.ModelAdmin):
 
 @admin.register(Cliente)
 class ClienteAdmin(admin.ModelAdmin):
-    list_display = ('usuario', 'idade', 'prescricao_medica', 'possui_problema_fisico',
+    list_display = ('usuario', 'idade', 'prescricao_medica', 'cpf', 'numero_telefone', 'possui_problema_fisico',
                     'possui_problema_cardiaco', 'possui_problema_respiratorio', 'possui_alergia')
 
 @admin.register(ClientePacote)
