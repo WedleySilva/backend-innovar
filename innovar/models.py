@@ -1,4 +1,4 @@
-from django.contrib.auth.models import AbstractUser, Group, Permission
+from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
@@ -7,7 +7,6 @@ class UsuarioCustomizado(AbstractUser):
     eh_cliente = models.BooleanField(default=False)
     cpf = models.CharField(max_length=14, unique=True)
     numero_telefone = models.CharField(max_length=15)
-   
 
     class Meta:
         permissions = [
@@ -18,17 +17,17 @@ class UsuarioCustomizado(AbstractUser):
     def __str__(self):
         return self.get_full_name()
 
-
 class Atendente(models.Model):
-    usuario = models.OneToOneField(UsuarioCustomizado, on_delete=models.CASCADE, primary_key=True, default=1    )
+    usuario = models.OneToOneField(UsuarioCustomizado, on_delete=models.CASCADE, primary_key=True)
 
     def __str__(self):
         return str(self.usuario)
 
-
 class Cliente(models.Model):
     usuario = models.OneToOneField(UsuarioCustomizado, on_delete=models.CASCADE, primary_key=True)
     idade = models.PositiveIntegerField()
+    cpf = models.CharField(max_length=14, unique=True, null=True)
+    numero_telefone = models.CharField(max_length=15, null=True)
     prescricao_medica = models.TextField(blank=True, null=True)
     possui_problema_fisico = models.BooleanField(default=False)
     possui_problema_cardiaco = models.BooleanField(default=False)
@@ -62,27 +61,35 @@ class Pacote(models.Model):
         return self.nome
 
 class ClienteProcedimento(models.Model):
-    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name='procedimentos')  # Adicione related_name
-    procedimento = models.ForeignKey(Procedimento, on_delete=models.CASCADE, related_name='clientes')  # Adicione related_name
-    sessoes_total = models.PositiveIntegerField()
+    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name='procedimentos')
+    procedimento = models.ForeignKey(Procedimento, on_delete=models.CASCADE, related_name='clientes')
+    sessoes_total = models.PositiveIntegerField(default=0)
     sessoes_completas = models.PositiveIntegerField(default=0)
-
 
     def __str__(self):
         return f"{self.cliente} - {self.procedimento}"
 
 class ClientePacote(models.Model):
-    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name='pacotes')  
-    pacote = models.ForeignKey(Pacote, on_delete=models.CASCADE, related_name='clientes')  
-
+    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name='pacotes')
+    pacote = models.ForeignKey(Pacote, on_delete=models.CASCADE, related_name='clientes')
+    sessoes_total = models.PositiveIntegerField(default=0)
+    sessoes_completas = models.PositiveIntegerField(default=0)
 
     def __str__(self):
         return f"{self.cliente} - {self.pacote}"
 
 class ChavePermissao(models.Model):
     chave = models.CharField(max_length=14, unique=True)
-    cpf_superior = models.CharField(max_length=14)  # CPF do superior
-
+    atendente = models.ForeignKey(Atendente, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.chave
+
+class Desconto(models.Model):
+    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name='descontos')
+    tipo = models.CharField(max_length=20, choices=[('procedimento', 'Procedimento'), ('pacote', 'Pacote')])
+    valor = models.DecimalField(max_digits=10, decimal_places=2)
+    data_aplicacao = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.cliente} - {self.tipo} - {self.item_id}"
