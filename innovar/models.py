@@ -1,5 +1,5 @@
+from django.contrib.auth.models import AbstractUser, BaseUserManager, Group
 from django.db import models
-from django.contrib.auth.models import AbstractUser, BaseUserManager
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
@@ -30,39 +30,22 @@ class CustomUserManager(BaseUserManager):
         return self._create_user(username, password, **extra_fields)
 
 class UsuarioCustomizado(AbstractUser):
-    eh_atendente = models.BooleanField(default=False)
-    eh_cliente = models.BooleanField(default=False)
     cpf = models.CharField(max_length=14, unique=True)
     numero_telefone = models.CharField(max_length=15)
+    idade = models.PositiveIntegerField(default=0)
+    prescricao_medica = models.TextField(blank=True, null=True)
+    possui_problema_fisico = models.BooleanField(default=False)
+    possui_problema_cardiaco = models.BooleanField(default=False)
+    possui_problema_respiratorio = models.BooleanField(default=False)
+    possui_alergia = models.BooleanField(default=False)
+    eh_atendente = models.BooleanField(default=False)
+    eh_cliente = models.BooleanField(default=False)
 
     objects = CustomUserManager()
 
     def __str__(self):
         return self.get_full_name()
 
-class Cliente(models.Model):
-    usuario = models.OneToOneField(
-        UsuarioCustomizado,
-        on_delete=models.CASCADE,
-        primary_key=True,
-        limit_choices_to={'eh_atendente': False}
-    )
-    idade = models.PositiveIntegerField(default=0)
-    cpf = models.CharField(max_length=14, unique=True, null=True)
-    numero_telefone = models.CharField(max_length=15, unique=True, null=True)
-    prescricao_medica = models.TextField(blank=True, null=True)
-    possui_problema_fisico = models.BooleanField(default=False)
-    possui_problema_cardiaco = models.BooleanField(default=False)
-    possui_problema_respiratorio = models.BooleanField(default=False)
-    possui_alergia = models.BooleanField(default=False)
-
-
-    def __str__(self):
-        return str(self.usuario)
-
-# Resto do seu código...
-
-# Sinal para atualizar Cliente quando UsuarioCustomizado é atualizado
 @receiver(post_save, sender=UsuarioCustomizado)
 def update_cliente_from_usuario(sender, instance, **kwargs):
     try:
@@ -78,17 +61,10 @@ def update_cliente_from_usuario(sender, instance, **kwargs):
     except Cliente.DoesNotExist:
         pass
 
-
-class Atendente(models.Model):
-    usuario = models.OneToOneField(UsuarioCustomizado, on_delete=models.CASCADE, primary_key=True)
-
-    def __str__(self):
-        return str(self.usuario)
-
 class HorarioBloqueado(models.Model):
     dia = models.DateField()
     hora_inicio = models.TimeField()
-    hora_fim = models.TimeField() 
+    hora_fim = models.TimeField()
 
     def __str__(self):
         return f"{self.dia} - {self.hora_inicio} às {self.hora_fim}"
@@ -108,8 +84,8 @@ class Pacote(models.Model):
         return self.nome
 
 class ClienteProcedimento(models.Model):
-    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name='procedimentos')
-    procedimento = models.ForeignKey(Procedimento, on_delete=models.CASCADE, related_name='clientes')
+    cliente = models.ForeignKey(UsuarioCustomizado, on_delete=models.CASCADE, related_name='procedimentos_cliente')
+    procedimento = models.ForeignKey(Procedimento, on_delete=models.CASCADE, related_name='clientes_procedimento')
     sessoes_total = models.PositiveIntegerField()
     sessoes_completas = models.PositiveIntegerField(default=0)
 
@@ -117,15 +93,30 @@ class ClienteProcedimento(models.Model):
         return f"{self.cliente} - {self.procedimento}"
 
 class ClientePacote(models.Model):
-    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE, related_name='pacotes')
-    pacote = models.ForeignKey(Pacote, on_delete=models.CASCADE, related_name='clientes')
+    cliente = models.ForeignKey(UsuarioCustomizado, on_delete=models.CASCADE, related_name='pacotes_cliente')
+    pacote = models.ForeignKey(Pacote, on_delete=models.CASCADE, related_name='clientes_pacote')
 
     def __str__(self):
         return f"{self.cliente} - {self.pacote}"
 
 class ChavePermissao(models.Model):
     chave = models.CharField(max_length=14, unique=True)
-    cpf_superior = models.CharField(max_length=14)  
+    cpf_superior = models.CharField(max_length=14)
 
     def __str__(self):
         return self.chave
+
+# Criação dos grupos e adição dos usuários aos grupos
+cliente_group, created_cliente = Group.objects.get_or_create(name='Cliente')
+atendente_group, created_atendente = Group.objects.get_or_create(name='Atendente')
+admin_group, created_admin = Group.objects.get_or_create(name='Admin')
+
+@receiver(post_save, sender=UsuarioCustomizado)
+def add_user_to_group(sender, instance, created, **kwargs):
+    if created:
+        if instance.eh_cliente:
+            instance.groups.add(cliente_group)
+        if instance.eh_atendente:
+            instance.groups.add(atendente_group)
+        if instance.is_staff: 
+            instance.groups.add(admin_group)
