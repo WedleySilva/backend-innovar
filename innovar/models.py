@@ -45,21 +45,16 @@ class UsuarioCustomizado(AbstractUser):
 
     def __str__(self):
         return self.get_full_name()
+    
+def add_user_to_group(sender, instance, created, **kwargs):
+    if created:
+        if instance.eh_cliente:
+            instance.groups.add(cliente_group)
+        if instance.eh_atendente:
+            instance.groups.add(atendente_group)
+        if instance.is_staff: 
+            instance.groups.add(admin_group)
 
-@receiver(post_save, sender=UsuarioCustomizado)
-def update_cliente_from_usuario(sender, instance, **kwargs):
-    try:
-        cliente = Cliente.objects.get(usuario=instance)
-        cliente.idade = instance.idade
-        cliente.possui_problema_fisico = instance.possui_problema_fisico
-        cliente.possui_problema_cardiaco = instance.possui_problema_cardiaco
-        cliente.possui_problema_respiratorio = instance.possui_problema_respiratorio
-        cliente.possui_alergia = instance.possui_alergia
-        cliente.cpf = instance.cpf
-        cliente.numero_telefone = instance.numero_telefone
-        cliente.save()
-    except Cliente.DoesNotExist:
-        pass
 
 class HorarioBloqueado(models.Model):
     dia = models.DateField()
@@ -84,17 +79,25 @@ class Pacote(models.Model):
         return self.nome
 
 class ClienteProcedimento(models.Model):
-    cliente = models.ForeignKey(UsuarioCustomizado, on_delete=models.CASCADE, related_name='procedimentos_cliente')
-    procedimento = models.ForeignKey(Procedimento, on_delete=models.CASCADE, related_name='clientes_procedimento')
+    cliente = models.ForeignKey(UsuarioCustomizado, on_delete=models.CASCADE)
+    procedimento = models.ForeignKey(Procedimento, on_delete=models.CASCADE)
     sessoes_total = models.PositiveIntegerField()
     sessoes_completas = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        unique_together = ('cliente', 'procedimento')
 
     def __str__(self):
         return f"{self.cliente} - {self.procedimento}"
 
 class ClientePacote(models.Model):
-    cliente = models.ForeignKey(UsuarioCustomizado, on_delete=models.CASCADE, related_name='pacotes_cliente')
-    pacote = models.ForeignKey(Pacote, on_delete=models.CASCADE, related_name='clientes_pacote')
+    cliente = models.ForeignKey(UsuarioCustomizado, on_delete=models.CASCADE)
+    pacote = models.ForeignKey(Pacote, on_delete=models.CASCADE)
+    sessoes_total = models.PositiveIntegerField()
+    sessoes_completas = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        unique_together = ('cliente', 'pacote')
 
     def __str__(self):
         return f"{self.cliente} - {self.pacote}"
@@ -106,7 +109,6 @@ class ChavePermissao(models.Model):
     def __str__(self):
         return self.chave
 
-# Criação dos grupos e adição dos usuários aos grupos
 cliente_group, created_cliente = Group.objects.get_or_create(name='Cliente')
 atendente_group, created_atendente = Group.objects.get_or_create(name='Atendente')
 admin_group, created_admin = Group.objects.get_or_create(name='Admin')
