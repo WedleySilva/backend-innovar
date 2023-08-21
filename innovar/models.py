@@ -47,14 +47,15 @@ class Cliente(models.Model):
         primary_key=True,
         limit_choices_to={'eh_atendente': False}
     )
-    idade = models.PositiveIntegerField()
-    cpf = models.CharField(max_length=14, unique=True)
-    numero_telefone = models.CharField(max_length=15, unique=True)
+    idade = models.PositiveIntegerField(default=0)
+    cpf = models.CharField(max_length=14, unique=True, null=True)
+    numero_telefone = models.CharField(max_length=15, unique=True, null=True)
     prescricao_medica = models.TextField(blank=True, null=True)
     possui_problema_fisico = models.BooleanField(default=False)
     possui_problema_cardiaco = models.BooleanField(default=False)
     possui_problema_respiratorio = models.BooleanField(default=False)
     possui_alergia = models.BooleanField(default=False)
+
 
     def __str__(self):
         return str(self.usuario)
