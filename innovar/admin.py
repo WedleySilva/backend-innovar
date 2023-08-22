@@ -1,9 +1,10 @@
 from django.contrib import admin
-from .models import UsuarioCustomizado, Procedimento, Pacote, ClienteProcedimento, ClientePacote
+from .models import UsuarioCustomizado, Procedimento, Pacote, ClienteProcedimento, ClientePacote, Desconto
+from django.core.exceptions import ValidationError
 
 class ClienteProcedimentoAdmin(admin.ModelAdmin):
     list_display = ('cliente', 'procedimento', 'sessoes_total', 'sessoes_completas')
-    
+
     def save_model(self, request, obj, form, change):
         try:
             obj.full_clean()
@@ -13,7 +14,7 @@ class ClienteProcedimentoAdmin(admin.ModelAdmin):
 
 class ClientePacoteAdmin(admin.ModelAdmin):
     list_display = ('cliente', 'pacote', 'sessoes_total', 'sessoes_completas')
-    
+
     def save_model(self, request, obj, form, change):
         try:
             obj.full_clean()
@@ -30,8 +31,13 @@ class PacoteAdmin(admin.ModelAdmin):
 class UsuarioCustomizadoAdmin(admin.ModelAdmin):
     list_display = ('username', 'cpf', 'numero_telefone', 'idade', 'prescricao_medica', 'possui_problema_fisico', 'possui_problema_cardiaco', 'possui_problema_respiratorio', 'possui_alergia', 'eh_atendente', 'eh_cliente')
 
+class DescontoAdmin(admin.ModelAdmin):
+    list_display = ('cliente', 'tipo_desconto', 'procedimento', 'pacote', 'valor_desconto', 'percentual_desconto', 'chave_permissao')
+    list_filter = ('cliente', 'tipo_desconto', 'procedimento', 'pacote')
+
 admin.site.register(UsuarioCustomizado, UsuarioCustomizadoAdmin)
 admin.site.register(Procedimento, ProcedimentoAdmin)
 admin.site.register(Pacote, PacoteAdmin)
 admin.site.register(ClienteProcedimento, ClienteProcedimentoAdmin)
 admin.site.register(ClientePacote, ClientePacoteAdmin)
+admin.site.register(Desconto, DescontoAdmin)
