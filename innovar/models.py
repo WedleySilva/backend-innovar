@@ -3,6 +3,7 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
+from django.core.exceptions import ValidationError
 
 class CustomUserManager(BaseUserManager):
     def _create_user(self, username, password, **extra_fields):
@@ -87,6 +88,14 @@ class ClienteProcedimento(models.Model):
     class Meta:
         unique_together = ('cliente', 'procedimento')
 
+    def clean(self):
+        if self.sessoes_completas > self.sessoes_total:
+            raise ValidationError("O número de sessões completas não pode ser maior que o total de sessões.")
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return f"{self.cliente} - {self.procedimento}"
 
@@ -99,9 +108,16 @@ class ClientePacote(models.Model):
     class Meta:
         unique_together = ('cliente', 'pacote')
 
+    def clean(self):
+        if self.sessoes_completas > self.sessoes_total:
+            raise ValidationError("O número de sessões completas não pode ser maior que o total de sessões.")
+
+    def save(self, *args, **kwargs):
+        self.clean()
+        super().save(*args, **kwargs)
+
     def __str__(self):
         return f"{self.cliente} - {self.pacote}"
-
 class ChavePermissao(models.Model):
     chave = models.CharField(max_length=14, unique=True)
     cpf_superior = models.CharField(max_length=14)
