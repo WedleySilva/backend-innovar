@@ -67,14 +67,14 @@ class HorarioBloqueado(models.Model):
         return f"{self.dia} - {self.hora_inicio} às {self.hora_fim}"
 
 class Procedimento(models.Model):
-    nome = models.CharField(max_length=255)
+    nome = models.CharField(max_length=255, unique=True)
     preco = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
         return self.nome
 
 class Pacote(models.Model):
-    nome = models.CharField(max_length=255)
+    nome = models.CharField(max_length=255, unique=True)
     preco = models.DecimalField(max_digits=10, decimal_places=2)
 
     def __str__(self):
