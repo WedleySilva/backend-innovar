@@ -90,6 +90,8 @@ class ClienteProcedimento(models.Model):
         unique_together = ('cliente', 'procedimento')
 
     def clean(self):
+        if self.cliente and not self.cliente.eh_cliente:
+            raise ValidationError("Apenas clientes podem ser associados a procedimentos.")
         if self.sessoes_completas > self.sessoes_total:
             raise ValidationError("O número de sessões completas não pode ser maior que o total de sessões.")
 
@@ -110,6 +112,8 @@ class ClientePacote(models.Model):
         unique_together = ('cliente', 'pacote')
 
     def clean(self):
+        if self.cliente and not self.cliente.eh_cliente:
+            raise ValidationError("Apenas clientes podem ser associados a pacotes.")
         if self.sessoes_completas > self.sessoes_total:
             raise ValidationError("O número de sessões completas não pode ser maior que o total de sessões.")
 
@@ -140,39 +144,39 @@ def add_user_to_group(sender, instance, created, **kwargs):
         if instance.is_staff: 
             instance.groups.add(admin_group)
 
-class Desconto(models.Model):
-    cliente = models.ForeignKey(UsuarioCustomizado, on_delete=models.CASCADE, limit_choices_to={'eh_cliente': True})
-    TIPOS_DESCONTO = [('dinheiro', 'Dinheiro'), ('porcentagem', 'Porcentagem')]
-    tipo_desconto = models.CharField(choices=TIPOS_DESCONTO, max_length=15)
-    procedimento = models.ForeignKey(Procedimento, blank=True, null=True, on_delete=models.SET_NULL)
-    pacote = models.ForeignKey(Pacote, blank=True, null=True, on_delete=models.SET_NULL)
-    valor_desconto = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(0)])
-    percentual_desconto = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(0), MaxValueValidator(100)])
-    chave_permissao = models.ForeignKey(ChavePermissao, on_delete=models.SET_NULL, blank=True, null=True)
+# class Desconto(models.Model):
+#     cliente = models.ForeignKey(UsuarioCustomizado, on_delete=models.CASCADE, limit_choices_to={'eh_cliente': True})
+#     TIPOS_DESCONTO = [('dinheiro', 'Dinheiro'), ('porcentagem', 'Porcentagem')]
+#     tipo_desconto = models.CharField(choices=TIPOS_DESCONTO, max_length=15)
+#     procedimento = models.ForeignKey(Procedimento, blank=True, null=True, on_delete=models.SET_NULL)
+#     pacote = models.ForeignKey(Pacote, blank=True, null=True, on_delete=models.SET_NULL)
+#     valor_desconto = models.DecimalField(max_digits=10, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(0)])
+#     percentual_desconto = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True, validators=[MinValueValidator(0), MaxValueValidator(100)])
+#     chave_permissao = models.ForeignKey(ChavePermissao, on_delete=models.SET_NULL, blank=True, null=True)
 
-    def clean(self):
-        if not self.valor_desconto and not self.percentual_desconto:
-            raise ValidationError("É necessário preencher pelo menos um dos campos de desconto.")
-        if self.valor_desconto and self.percentual_desconto:
-            raise ValidationError("Apenas um campo de desconto (valor em dinheiro ou percentual) deve ser preenchido.")
-        if self.tipo_desconto == 'dinheiro':
-            if self.valor_desconto and self.valor_desconto > self.get_max_valor_desconto():
-                raise ValidationError("O valor do desconto em dinheiro não pode ser maior que o valor registrado no plano ou procedimento escolhido.")
-        elif self.tipo_desconto == 'porcentagem' and (not self.percentual_desconto or self.percentual_desconto > 100):
-            raise ValidationError("O desconto em porcentagem deve estar entre 0 e 100.")
-        if self.chave_permissao and self.cliente.cpf != self.chave_permissao.cpf_superior:
-            raise ValidationError("O CPF do cliente não corresponde ao CPF registrado na chave de permissão.")
+#     def clean(self):
+#         if not self.valor_desconto and not self.percentual_desconto:
+#             raise ValidationError("É necessário preencher pelo menos um dos campos de desconto.")
+#         if self.valor_desconto and self.percentual_desconto:
+#             raise ValidationError("Apenas um campo de desconto (valor em dinheiro ou percentual) deve ser preenchido.")
+#         if self.tipo_desconto == 'dinheiro':
+#             if self.valor_desconto and self.valor_desconto > self.get_max_valor_desconto():
+#                 raise ValidationError("O valor do desconto em dinheiro não pode ser maior que o valor registrado no plano ou procedimento escolhido.")
+#         elif self.tipo_desconto == 'porcentagem' and (not self.percentual_desconto or self.percentual_desconto > 100):
+#             raise ValidationError("O desconto em porcentagem deve estar entre 0 e 100.")
+#         if self.chave_permissao and self.cliente.cpf != self.chave_permissao.cpf_superior:
+#             raise ValidationError("O CPF do cliente não corresponde ao CPF registrado na chave de permissão.")
 
-    def get_max_valor_desconto(self):
-        if self.procedimento:
-            return self.procedimento.preco
-        elif self.pacote:
-            return self.pacote.preco
-        return 0
+#     def get_max_valor_desconto(self):
+#         if self.procedimento:
+#             return self.procedimento.preco
+#         elif self.pacote:
+#             return self.pacote.preco
+#         return 0
 
-    def save(self, *args, **kwargs):
-        self.clean()
-        super().save(*args, **kwargs)
+#     def save(self, *args, **kwargs):
+#         self.clean()
+#         super().save(*args, **kwargs)
 
-    def __str__(self):
-        return f"Desconto para {self.cliente}"
+#     def __str__(self):
+#         return f"Desconto para {self.cliente}"
