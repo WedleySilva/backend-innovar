@@ -123,12 +123,6 @@ class ClientePacote(models.Model):
 
     def __str__(self):
         return f"{self.cliente} - {self.pacote}"
-class ChavePermissao(models.Model):
-    chave = models.CharField(max_length=14, unique=True)
-    cpf_superior = models.CharField(max_length=14)
-
-    def __str__(self):
-        return self.chave
 
 cliente_group, created_cliente = Group.objects.get_or_create(name='Cliente')
 atendente_group, created_atendente = Group.objects.get_or_create(name='Atendente')
@@ -143,6 +137,13 @@ def add_user_to_group(sender, instance, created, **kwargs):
             instance.groups.add(atendente_group)
         if instance.is_staff: 
             instance.groups.add(admin_group)
+
+# class ChavePermissao(models.Model):
+#     chave = models.CharField(max_length=14, unique=True)
+#     cpf_superior = models.CharField(max_length=14)
+
+#     def __str__(self):
+#         return self.chave
 
 # class Desconto(models.Model):
 #     cliente = models.ForeignKey(UsuarioCustomizado, on_delete=models.CASCADE, limit_choices_to={'eh_cliente': True})
