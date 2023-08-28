@@ -39,13 +39,18 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'innovar',
     'django_extensions',
-    'rest_framework'
+    'rest_framework',
+    "rest_framework_simplejwt",
+
 ]
 
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
-    ]
+    ],
+    "DEFAULT_AUTHENTICATION_CLASSES": (
+        "rest_framework_simplejwt.authentication.JWTAuthentication",
+    ),
 }
 
 MIDDLEWARE = [
