@@ -29,7 +29,11 @@ class PacoteAdmin(admin.ModelAdmin):
     list_display = ('nome', 'preco')
 
 class UsuarioCustomizadoAdmin(admin.ModelAdmin):
-    list_display = ('username', 'cpf', 'numero_telefone', 'idade', 'prescricao_medica', 'possui_problema_fisico', 'possui_problema_cardiaco', 'possui_problema_respiratorio', 'possui_alergia', 'eh_atendente', 'eh_cliente')
+    list_display = (
+        'username', 'cpf', 'numero_telefone', 'data_nascimento', 'prescricao_medica',
+        'possui_problema_fisico', 'possui_problema_cardiaco', 'possui_problema_respiratorio',
+        'possui_alergia', 'eh_atendente', 'eh_cliente'
+    )
 
 admin.site.register(UsuarioCustomizado, UsuarioCustomizadoAdmin)
 admin.site.register(Procedimento, ProcedimentoAdmin)

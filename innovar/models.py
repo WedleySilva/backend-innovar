@@ -34,7 +34,7 @@ class CustomUserManager(BaseUserManager):
 class UsuarioCustomizado(AbstractUser):
     cpf = models.CharField(max_length=14, unique=True)
     numero_telefone = models.CharField(max_length=15)
-    idade = models.PositiveIntegerField(default=0)
+    data_nascimento = models.DateField(null=True, blank=True)
     prescricao_medica = models.TextField(blank=True, null=True)
     possui_problema_fisico = models.BooleanField(default=False)
     possui_problema_cardiaco = models.BooleanField(default=False)
