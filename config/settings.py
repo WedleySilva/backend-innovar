@@ -1,3 +1,5 @@
+import os
+from pathlib import Path
 """
 Django settings for config project.
 
@@ -10,7 +12,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
-from pathlib import Path
+os.environ['MAGIC_PATH'] = '/path/to/magic/files'
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -40,13 +42,21 @@ INSTALLED_APPS = [
     'innovar',
     'django_extensions',
     'rest_framework',
-    "rest_framework_simplejwt",
+    'rest_framework_simplejwt',
+    'uploader',
 
 ]
+
+# App Uploader settings
+MEDIA_URL = "http://localhost:8000/media/"
+MEDIA_ENDPOINT = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media/")
+FILE_UPLOAD_PERMISSIONS = 0o640
 
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
         "rest_framework.permissions.IsAuthenticated",
+        "rest_framework.permissions.DjangoModelPermissions",
     ],
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
