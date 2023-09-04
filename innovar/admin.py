@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import UsuarioCustomizado, Procedimento, Pacote, ClienteProcedimento, ClientePacote
+from .models import UsuarioCustomizado, Procedimento, Pacote, ClienteProcedimento, ClientePacote, HorarioBloqueado
 from django.core.exceptions import ValidationError
 
 class ClienteProcedimentoAdmin(admin.ModelAdmin):
@@ -35,8 +35,13 @@ class UsuarioCustomizadoAdmin(admin.ModelAdmin):
         'possui_alergia', 'eh_atendente', 'eh_cliente'
     )
 
+class HorarioBloqueadoAdmin(admin.ModelAdmin): 
+    list_display = ('dia', 'hora_inicio', 'hora_fim')
+
+
 admin.site.register(UsuarioCustomizado, UsuarioCustomizadoAdmin)
 admin.site.register(Procedimento, ProcedimentoAdmin)
 admin.site.register(Pacote, PacoteAdmin)
 admin.site.register(ClienteProcedimento, ClienteProcedimentoAdmin)
 admin.site.register(ClientePacote, ClientePacoteAdmin)
+admin.site.register(HorarioBloqueado, HorarioBloqueadoAdmin)

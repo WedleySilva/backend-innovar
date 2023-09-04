@@ -1,12 +1,13 @@
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
-from .models import UsuarioCustomizado, Procedimento, Pacote, ClienteProcedimento, ClientePacote
+from .models import UsuarioCustomizado, Procedimento, Pacote, ClienteProcedimento, ClientePacote, HorarioBloqueado
 from .serializers import (
     UsuarioCustomizadoSerializer,
     ProcedimentoSerializer,
     PacoteSerializer,
     ClienteProcedimentoSerializer,
-    ClientePacoteSerializer
+    ClientePacoteSerializer,
+    HorarioBloqueadoSerializer, 
 )
 
 class UsuarioCustomizadoViewSet(viewsets.ModelViewSet):
@@ -29,3 +30,8 @@ class ClientePacoteViewSet(viewsets.ModelViewSet):
     queryset = ClientePacote.objects.all()
     serializer_class = ClientePacoteSerializer
     permission_classes = [IsAuthenticated]
+class HorarioBloqueadoViewSet(viewsets.ModelViewSet):
+    queryset = HorarioBloqueado.objects.all()
+    serializer_class = HorarioBloqueadoSerializer
+    permission_classes = [IsAuthenticated]
+ 

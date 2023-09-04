@@ -10,6 +10,7 @@ from innovar.views import (
     PacoteViewSet,
     ClienteProcedimentoViewSet,
     ClientePacoteViewSet,
+    HorarioBloqueadoViewSet,
 )
 from uploader.views import (
     ImageUploadViewSet,
@@ -28,6 +29,7 @@ router.register(r'pacotes', PacoteViewSet)
 router.register(r'clientes_procedimentos', ClienteProcedimentoViewSet)
 router.register(r'clientes_pacotes', ClientePacoteViewSet)
 router.register(r' imagens', ImageUploadViewSet)
+router.register(r'horarios_bloqueados', HorarioBloqueadoViewSet)
 
 
 urlpatterns = [

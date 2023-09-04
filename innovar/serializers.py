@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import UsuarioCustomizado, HorarioBloqueado, Procedimento, Pacote, ClienteProcedimento, ClientePacote
+from .models import UsuarioCustomizado, HorarioBloqueado, Procedimento, Pacote, ClienteProcedimento, ClientePacote, HorarioBloqueado
 
 class UsuarioCustomizadoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -30,3 +30,9 @@ class ClientePacoteSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClientePacote
         fields = '__all__'
+
+class HorarioBloqueadoClientePacoteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HorarioBloqueado
+        fields = '__all__'
+        depth = 1
