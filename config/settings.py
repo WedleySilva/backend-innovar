@@ -27,7 +27,7 @@ SECRET_KEY = 'django-insecure-1=bm5tdoq7x%45no50wvgt-bk4$ebof@+mxxomn3mq5q6^g$bn
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     'innovar',
     'django_extensions',
     'rest_framework',
-    'rest_framework_simplejwt',
+    # 'rest_framework_simplejwt',
     'uploader',
     'corsheaders',
 
@@ -56,11 +56,11 @@ FILE_UPLOAD_PERMISSIONS = 0o640
 
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.IsAuthenticated",
-        "rest_framework.permissions.DjangoModelPermissions",
+        # "rest_framework.permissions.IsAuthenticated",
+        # "rest_framework.permissions.DjangoModelPermissions",
     ],
     "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework_simplejwt.authentication.JWTAuthentication",
+        # "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),
 }
 
