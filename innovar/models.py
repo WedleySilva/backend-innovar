@@ -57,7 +57,6 @@ def add_user_to_group(sender, instance, created, **kwargs):
         if instance.is_staff: 
             instance.groups.add(admin_group)
 
-
 class HorarioBloqueado(models.Model):
     dia = models.DateField()
     hora_inicio = models.TimeField()
