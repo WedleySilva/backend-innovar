@@ -1,4 +1,5 @@
 from django.urls import path, include
+from innovar.views import cadastrar_usuario
 from django.conf import settings
 from django.conf.urls.static import static
 from uploader.router import router as uploader_router
@@ -31,12 +32,12 @@ router.register(r'clientes_pacotes', ClientePacoteViewSet)
 router.register(r' imagens', ImageUploadViewSet)
 router.register(r'horarios_bloqueados', HorarioBloqueadoViewSet)
 
-
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include(router.urls)),
     path("token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+     path('api/cadastrar_usuario/', cadastrar_usuario, name='cadastrar_usuario'),
 ]
 
 path("api/media/", include(uploader_router.urls)),
