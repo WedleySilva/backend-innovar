@@ -1,6 +1,5 @@
 from django.contrib.auth.models import AbstractUser, BaseUserManager, Group
 from django.db import models
-from .validators import is_valid_cpf, is_valid_age
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
