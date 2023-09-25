@@ -1,5 +1,10 @@
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny
+from rest_framework_simplejwt.tokens import RefreshToken
+# from .serializers import CustomUserSerializer
+from .serializers import UserAuthenticationSerializer
+from rest_framework.views import APIView
+from rest_framework_simplejwt.tokens import RefreshToken
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from rest_framework.response import Response

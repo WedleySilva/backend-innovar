@@ -41,3 +41,4 @@ class HorarioBloqueadoClientePacoteSerializer(serializers.ModelSerializer):
 class UserAuthenticationSerializer(serializers.Serializer):
     cpf = serializers.CharField(max_length=14)
     password = serializers.CharField(write_only=True)
+

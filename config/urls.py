@@ -12,6 +12,8 @@ from innovar.views import (
     ClienteProcedimentoViewSet,
     ClientePacoteViewSet,
     HorarioBloqueadoViewSet,
+    CustomTokenObtainPairView,
+  
 )
 from uploader.views import (
     ImageUploadViewSet,
@@ -37,7 +39,8 @@ urlpatterns = [
     path("", include(router.urls)),
     path("token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
     path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
-     path('token/', views.CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
+    path('token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'), 
+    path("api/media/", include(uploader_router.urls)),
 ]
 
 path("api/media/", include(uploader_router.urls)),
