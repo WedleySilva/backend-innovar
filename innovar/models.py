@@ -47,15 +47,29 @@ class UsuarioCustomizado(AbstractUser):
 
     def __str__(self):
         return self.get_full_name()
-    
+
 def add_user_to_group(sender, instance, created, **kwargs):
     if created:
+        cliente_group = Group.objects.get(name='Cliente')  
+        atendente_group = Group.objects.get(name='Atendente')
+        admin_group = Group.objects.get(name='Admin')  
         if instance.eh_cliente:
             instance.groups.add(cliente_group)
         if instance.eh_atendente:
             instance.groups.add(atendente_group)
-        if instance.is_staff: 
+        if instance.is_staff:
             instance.groups.add(admin_group)
+
+post_save.connect(add_user_to_group, sender=UsuarioCustomizado)
+
+def _create_user(self, cpf, password, **extra_fields):
+    if not cpf:
+        raise ValueError(_('The CPF field must be set'))
+    email = self.normalize_email(cpf)
+    user = self.model(cpf=email, **extra_fields)
+    user.set_password(password)
+    user.save(using=self._db)
+    return user
 
 class HorarioBloqueado(models.Model):
     dia = models.DateField()

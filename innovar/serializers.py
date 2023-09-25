@@ -4,7 +4,8 @@ from .models import UsuarioCustomizado, HorarioBloqueado, Procedimento, Pacote, 
 class UsuarioCustomizadoSerializer(serializers.ModelSerializer):
     class Meta:
         model = UsuarioCustomizado
-        fields = '__all__'
+        fields = ('id', 'username', 'email', 'password')
+        extra_kwargs = {'password': {'write_only': True}}
 
 class HorarioBloqueadoSerializer(serializers.ModelSerializer):
     class Meta:
@@ -36,3 +37,7 @@ class HorarioBloqueadoClientePacoteSerializer(serializers.ModelSerializer):
         model = HorarioBloqueado
         fields = '__all__'
         depth = 1
+
+class UserAuthenticationSerializer(serializers.Serializer):
+    cpf = serializers.CharField(max_length=14)
+    password = serializers.CharField(write_only=True)
