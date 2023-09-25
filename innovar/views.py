@@ -50,7 +50,7 @@ class ClientePacoteViewSet(viewsets.ModelViewSet):
 class HorarioBloqueadoViewSet(viewsets.ModelViewSet):
     queryset = HorarioBloqueado.objects.all()
     serializer_class = HorarioBloqueadoSerializer
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
 class CustomTokenObtainPairView(TokenObtainPairView):
     serializer_class = UserAuthenticationSerializer
