@@ -19,10 +19,10 @@ from uploader.views import (
     ImageUploadViewSet,
 )
 
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-)
+# from rest_framework_simplejwt.views import (
+#     TokenObtainPairView,
+#     TokenRefreshView,
+# )
 from drf_spectacular.views import (
     SpectacularAPIView,
     SpectacularRedocView,
@@ -42,8 +42,8 @@ router.register(r'horarios_bloqueados', HorarioBloqueadoViewSet)
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include(router.urls)),
-    path("token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
-    path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
+    # path("token/", TokenObtainPairView.as_view(), name="token_obtain_pair"),
+    # path("token/refresh/", TokenRefreshView.as_view(), name="token_refresh"),
     path('token/', CustomTokenObtainPairView.as_view(), name='token_obtain_pair'),
     path("api/media/", include(uploader_router.urls)),
     # OpenAPI 3
@@ -61,7 +61,6 @@ urlpatterns = [
     path("api/", include(router.urls)),
 
 ]
-
 
 
 urlpatterns += static(settings.MEDIA_ENDPOINT, document_root=settings.MEDIA_ROOT)

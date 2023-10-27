@@ -1,10 +1,10 @@
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny
-from rest_framework_simplejwt.tokens import RefreshToken
+# from rest_framework.permissions import AllowAny
+# from rest_framework_simplejwt.tokens import RefreshToken
 # from .serializers import CustomUserSerializer
 from .serializers import UserAuthenticationSerializer
 from rest_framework.views import APIView
-from rest_framework_simplejwt.tokens import RefreshToken
+# from rest_framework_simplejwt.tokens import RefreshToken
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from rest_framework.response import Response
@@ -25,27 +25,27 @@ from .serializers import (
 class UsuarioCustomizadoViewSet(viewsets.ModelViewSet):
     queryset = UsuarioCustomizado.objects.all()
     serializer_class = UsuarioCustomizadoSerializer
-    permission_classes = [IsAuthenticated]
-
-class ProcedimentoViewSet(viewsets.ModelViewSet):
-    queryset = Procedimento.objects.all()
-    serializer_class = ProcedimentoSerializer
-    permission_classes = [IsAuthenticated]
+   # permission_classes = [IsAuthenticated]
 
 class PacoteViewSet(viewsets.ModelViewSet):
     queryset = Pacote.objects.all()
     serializer_class = PacoteSerializer
-    permission_classes = [IsAuthenticated]
+   # permission_classes = [IsAuthenticated]
+
+class ProcedimentoViewSet(viewsets.ModelViewSet):
+    queryset = Procedimento.objects.all()
+    serializer_class = PacoteSerializer
+   # permission_classes = [IsAuthenticated]
 
 class ClienteProcedimentoViewSet(viewsets.ModelViewSet):
     queryset = ClienteProcedimento.objects.all()
     serializer_class = ClienteProcedimentoSerializer
-    permission_classes = [IsAuthenticated]
+   # permission_classes = [IsAuthenticated]
 
 class ClientePacoteViewSet(viewsets.ModelViewSet):
     queryset = ClientePacote.objects.all()
     serializer_class = ClientePacoteSerializer
-    permission_classes = [IsAuthenticated]
+    # permission_classes = [IsAuthenticated]
 
 class HorarioBloqueadoViewSet(viewsets.ModelViewSet):
     queryset = HorarioBloqueado.objects.all()
