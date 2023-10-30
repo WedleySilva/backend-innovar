@@ -1,3 +1,3 @@
 # backend-innovar
 
-Trabalho por *Wedly Silva Schmoeller* e *José Gabriel* da #3INFO3
+Trabalho por *Wedley Silva Schmoeller* e *José Gabriel* da #3INFO3
