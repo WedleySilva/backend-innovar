@@ -41,10 +41,10 @@ INSTALLED_APPS = [
     'innovar',
     'django_extensions',
     'rest_framework',
-    # 'rest_framework_simplejwt',
     'uploader',
+    'corsheaders',
     "drf_spectacular",
-    # 'corsheaders',
+
 
 ]
 # App Uploader settings
@@ -55,13 +55,6 @@ FILE_UPLOAD_PERMISSIONS = 0o640
 
 REST_FRAMEWORK = {
      "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
-    # "DEFAULT_PERMISSION_CLASSES": [
-    #     "rest_framework.permissions.IsAuthenticated",
-    #     "rest_framework.permissions.DjangoModelPermissions",
-    # ],
-    # "DEFAULT_AUTHENTICATION_CLASSES": (
-    #     "rest_framework_simplejwt.authentication.JWTAuthentication",
-    # ),
 }
 
 SPECTACULAR_SETTINGS = {
@@ -70,13 +63,6 @@ SPECTACULAR_SETTINGS = {
     "VERSION": "1.0.0",
 }
 
-# SIMPLE_JWT = {
-#     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
-#     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
-#     'SLIDING_TOKEN_LIFETIME': timedelta(days=30),
-#     'SLIDING_TOKEN_REFRESH_GRACE_PERIOD': timedelta(days=7),
-#     'SLIDING_TOKEN_REFRESH_TIMES': ((timedelta(days=1), timedelta(days=2)),),
-# }
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -87,8 +73,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
+    'corsheaders.middleware.CorsMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
