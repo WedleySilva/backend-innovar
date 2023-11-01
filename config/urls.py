@@ -5,11 +5,8 @@ from uploader.router import router as uploader_router
 from rest_framework.routers import DefaultRouter
 from django.contrib import admin
 from innovar.views import (
-    UsuarioCustomizadoViewSet,
     ProcedimentoViewSet,
     PacoteViewSet,
-    ClienteProcedimentoViewSet,
-    ClientePacoteViewSet,
     HorarioBloqueadoViewSet,
 
   
@@ -26,11 +23,8 @@ from drf_spectacular.views import (
 
 router = DefaultRouter()
 
-router.register(r'usuarios', UsuarioCustomizadoViewSet)
 router.register(r'procedimentos', ProcedimentoViewSet)
 router.register(r'pacotes', PacoteViewSet)
-router.register(r'clientes_procedimentos', ClienteProcedimentoViewSet)
-router.register(r'clientes_pacotes', ClientePacoteViewSet)
 router.register(r' imagens', ImageUploadViewSet)
 router.register(r'horarios_bloqueados', HorarioBloqueadoViewSet)
 
