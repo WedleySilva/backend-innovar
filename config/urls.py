@@ -25,7 +25,7 @@ router = DefaultRouter()
 
 router.register(r'procedimentos', ProcedimentoViewSet)
 router.register(r'pacotes', PacoteViewSet)
-router.register(r' imagens', ImageUploadViewSet)
+router.register(r'imagens', ImageUploadViewSet)
 router.register(r'horarios_bloqueados', HorarioBloqueadoViewSet)
 
 urlpatterns = [
