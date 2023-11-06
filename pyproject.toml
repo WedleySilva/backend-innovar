@@ -12,7 +12,7 @@ authors = [
     {name = "Wedley Silva Schmoeller", email = "wedleysilva2105@gmail.com"},
 ]
 dependencies = [
-    "django>=4.2.6",
+    "django>=4.2.7",
     "django-extensions>=3.2.3",
     "pydotplus>=2.0.2",
     "djangorestframework>=3.14.0",
